@@ -1,0 +1,6 @@
+library(ggplot2)
+library(cowplot)
+iris
+
+p = ggplot(iris, aes(x=Sepal.Width)) + geom_histogram(fill="gray", color="black") + theme_classic()
+p

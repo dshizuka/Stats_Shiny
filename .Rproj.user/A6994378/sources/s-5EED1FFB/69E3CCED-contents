@@ -1,0 +1,5 @@
+cd <- iris %>% select(Sepal.Length)
+cd
+
+
+ggplot(cd, aes(cd[,1])) + geom_histogram(fill="gray", color="black") + theme_classic()
