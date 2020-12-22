@@ -28,7 +28,7 @@ ui <- shinyUI(navbarPage("Walking Through Stats",
                                           br(),
                                       ),
                                       mainPanel(
-                                          "Upload your data on the left and check to make sure the variables are categorized correctly.",
+                                          "Once you upload your data on the left, the first several rows of the data will show up as a table. Check to make sure that you've uploaded the correct table and that the variables are categorized correctly. Once it looks good, move on to the 'Plot the data' section",
                                           tableOutput("head"),
                                           
                                           h3(verbatimTextOutput("var.check"))
