@@ -43,7 +43,7 @@ shinyUI(navbarPage("Walking Through Stats",
                                           br(), br(),
                                           selectInput("chosen.value",  "Choose a value to plot", choices = names(DF), selected = 1),
                                           br(),
-                                          downloadButton('export', label = "Download your figure")
+                                          downloadButton("export", label = "Download your figure")
                                       ),
                                       mainPanel(
                                           plotOutput("histogram")

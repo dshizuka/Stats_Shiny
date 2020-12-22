@@ -66,11 +66,12 @@ server <- shinyServer(function(input, output, session){
     
     #
     output$export <- downloadHandler(
-        filename = function(){paste("stats_graphs_", strftime(Sys.time(), format = "%Y-%m-%d_%H-%M-%S"), ".pdf", sep = "")},
-        content = function(file){
-#            pdf(file,  onefile = T, width = 8.5, height = 11)
-            pdf()
-            values$p
+        filename <- "trialplot.pdf",
+#        filename <- function(){
+#            paste("stats_graphs_", strftime(Sys.time(), format = "%Y-%m-%d_%H-%M-%S"), ".pdf", sep = "")},
+        content <- function(file){
+            pdf(file, "plot.pdf", onefile = T)
+            grid.arrange(values$p)
             dev.off()
         }
         )
