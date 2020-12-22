@@ -8,7 +8,7 @@
 #
 
 library(shiny)
-
+library(rhandsontable)
 DF=iris
 
 shinyUI(navbarPage("Walking Through Stats",
