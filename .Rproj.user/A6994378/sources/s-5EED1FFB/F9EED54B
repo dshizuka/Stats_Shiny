@@ -1,24 +1,24 @@
 {
-    "id": "8A108CAA",
-    "path": "~/Documents/GitHub/Stats_Shiny/server.R",
-    "project_path": "server.R",
+    "id": "F9EED54B",
+    "path": "~/Documents/GitHub/Stats_Shiny/stats_shiny_v3/app.R",
+    "project_path": "stats_shiny_v3/app.R",
     "type": "r_source",
     "hash": "0",
     "contents": "",
     "dirty": false,
-    "created": 1608649118376.0,
+    "created": 1608660682740.0,
     "source_on_save": false,
     "relative_order": 3,
     "properties": {
-        "cursorPosition": "73,34",
-        "scrollLine": "58"
+        "cursorPosition": "122,0",
+        "scrollLine": "108"
     },
     "folds": "",
-    "lastKnownWriteTime": 1608655933,
+    "lastKnownWriteTime": 1608660636,
     "encoding": "UTF-8",
     "collab_server": "",
     "source_window": "",
-    "last_content_update": 1608655933437,
+    "last_content_update": 1608660636,
     "read_only": false,
     "read_only_alternatives": []
 }
