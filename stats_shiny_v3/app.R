@@ -28,10 +28,12 @@ ui <- shinyUI(navbarPage("Walking Through Stats",
                                           br(),
                                       ),
                                       mainPanel(
-                                          tableOutput("head")
+                                          "Upload your data on the left and check to make sure the variables are categorized correctly.",
+                                          tableOutput("head"),
                                           
+                                          h3(verbatimTextOutput("var.check"))
                                       )
-                                  )
+                         )
                          ),
                          tabPanel("Plot the data",
                                   sidebarLayout( # give us a nice data selection side bar!
@@ -44,9 +46,9 @@ ui <- shinyUI(navbarPage("Walking Through Stats",
                                           ),
                                       mainPanel(
                                           plotOutput("histogram")
-                                      )
                                   )
-                         )))
+                         ))
+                         ))
 
 # Define server logic required to draw a histogram
 server <- function(input, output, session){
@@ -72,6 +74,10 @@ server <- function(input, output, session){
         head(data(), input$n)
     })
 
+    #
+    output$var.check <- renderPrint({
+        sapply(as.data.frame(data()), class)
+    })
     
     # ##get data ready to plot
       dataSelection <- reactive({
@@ -93,7 +99,7 @@ server <- function(input, output, session){
             text(x=1.5, y=1.5, labels="The chosen data is not a numerical value", cex=2)
         }
     })
-    
+  
     #
     output$export <- downloadHandler(
         filename <- "trialplot.pdf",
