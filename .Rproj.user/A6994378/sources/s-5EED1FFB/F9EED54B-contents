@@ -13,30 +13,22 @@ library(tidyverse)
 library(ggplot2)
 library(patchwork)
 
-DF=iris
 
 # Define UI for application that draws a histogram
 ui <- shinyUI(navbarPage("Walking Through Stats",
                          tabPanel("Enter the data",
                                   sidebarLayout(
                                       sidebarPanel(
-                                          helpText("Shiny app based on an example given in the rhandsontable package.", 
-                                                   "Right-click on the table to delete/insert rows.", 
-                                                   "Double-click on a cell to edit"),
-                                          
-                                          
-                                          br(), 
-                                          
                                           wellPanel(
-                                              h3("Save"), 
-                                              actionButton("save", "Save table")
-                                          )        
-                                          
+                                              h4("Upload data file (up to 5MB)"),
+                                              fileInput("upload", NULL)
+                                              ),
+                                          br(), 
+                                          numericInput("n", "# rows to show", value = 5, min = 1, step = 1),
+                                          br(),
                                       ),
-                                      
                                       mainPanel(
-                                          
-                                          rHandsontableOutput("hot")
+                                          tableOutput("head")
                                           
                                       )
                                   )
@@ -46,10 +38,10 @@ ui <- shinyUI(navbarPage("Walking Through Stats",
                                       sidebarPanel(
                                           h2("Try a histogram out for size"), # Some nice welcoming text for users
                                           br(), br(),
-                                          selectInput("chosen.value",  "Choose a value to plot", choices = names(DF), selected = 1),
+                                          selectInput("chosen.value",  "Choose a value to plot", choices = NULL),
                                           br(),
                                           downloadButton("export", label = "Download your figure")
-                                      ),
+                                          ),
                                       mainPanel(
                                           plotOutput("histogram")
                                       )
@@ -60,45 +52,40 @@ ui <- shinyUI(navbarPage("Walking Through Stats",
 server <- function(input, output, session){
     values <- reactiveValues()
     
-    ## Handsontable
-    observe({
-        if (!is.null(input$hot)) {
-            DF = hot_to_r(input$hot)
-        } else {
-            if (is.null(values[["DF"]]))
-                DF <- DF
-            else
-                DF <- values[["DF"]]
-        }
-        values[["DF"]] <- DF
+    data <- reactive({
+        req(input$upload)
+        
+        ext <- tools::file_ext(input$upload$name)
+        switch(ext,
+               csv = vroom::vroom(input$upload$datapath, delim = ","),
+               tsv = vroom::vroom(input$upload$datapath, delim = "\t"),
+               validate("Invalid file; Please upload a .csv or .tsv file")
+        )
     })
     
-    output$hot <- renderRHandsontable({
-        DF <- values[["DF"]]
-        if (!is.null(DF))
-            #      rhandsontable(DF, useTypes = as.logical(input$useType), stretchH = "all")
-            #  })
-            rhandsontable(DF,  stretchH = "all")
+    observeEvent(data(),{
+        choices=names(data())
+        updateSelectInput(session, "chosen.value", choices=choices)
     })
     
-    ## Save 
-    observeEvent(input$save, {
-        finalDF <- isolate(values[["DF"]])
-        saveRDS(finalDF, file="table.rds")
+    output$head <-   renderTable({
+        head(data(), input$n)
     })
+
     
-    ##get data ready to plot
-    dataSelection <- reactive({
-        dat = readRDS("table.rds")
-        chosen.data <- dat %>% select(input$chosen.value)
-    }) 
+    # ##get data ready to plot
+      dataSelection <- reactive({
+          dat <- data()
+          chosen.data <- dat %>% select(input$chosen.value)
+          return(chosen.data)
+      }) 
     
     # 
     output$histogram = renderPlot({
         require(ggplot2)
         chosen.data <- dataSelection()
-        if(class(chosen.data[,1])=="numeric"){
-            values$p <-  ggplot(data = chosen.data, aes(chosen.data[,1])) + geom_histogram(fill="gray", color="black") + theme_classic()
+        if(class(chosen.data[[1]])=="numeric"){
+            values$p <-  ggplot(data = chosen.data, aes(chosen.data[[1]])) + geom_histogram(fill="gray", color="black") + theme_classic()
             values$p
         }
         else{

@@ -11,3 +11,10 @@ grid.arrange(p)
 paste("stats_graphs_", strftime(Sys.time(), format = "%Y-%m-%d_%H-%M-%S"), ".pdf", sep = "")
 ?strftime
 ?pdf
+
+df=read.csv("old/domdat.2010.csv")
+df
+tb=as.tibble(df)
+tb
+glimpse(tb)
+
