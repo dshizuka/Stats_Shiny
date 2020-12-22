@@ -1,2 +1,0 @@
-dat=read.csv("domdat.2010.csv")
-names()
