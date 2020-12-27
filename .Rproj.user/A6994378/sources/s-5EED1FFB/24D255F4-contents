@@ -15,7 +15,7 @@ ui <- shinyUI(navbarPage("Walking Through Stats",
                                           wellPanel(
                                               h3("Upload data file (.csv format)"),
                                               fileInput("upload", NULL)
-                                              ),
+                                          ),
                                           br(), 
                                           numericInput("n", "# rows to show", value = 5, min = 1, step = 1),
                                           br(),
@@ -26,21 +26,24 @@ ui <- shinyUI(navbarPage("Walking Through Stats",
                                           
                                           h3(verbatimTextOutput("var.check"))
                                       )
-                         )
+                                  )
                          ),
                          tabPanel("Plot the data",
                                   sidebarLayout( # give us a nice data selection side bar!
                                       sidebarPanel(
-                                          h4("Try a histogram out for size"), 
-                                          selectInput("chosen.value",  "Choose a value to plot", choices = NULL),
+                                          h4("What kind of plot do you want to make?"), 
+                                          selectInput("plot.type", label=NULL,  choices=c("CHOOSE PLOT TYPE" =0, "histogram (one group)" =1, "histogram (two groups)" =2, "boxplot" =3, "scatterplot" =4)),
+                                          
+                                          br(),
+                                          selectInput("var1",  "Choose x variable", choices = NULL),
                                           br(),
                                           downloadButton("export", label = "Download a report")
-                                          ),
+                                      ),
                                       mainPanel(
-                                          plotOutput("histogram")
-                                  )
-                         ))
-                         ))
+                                          plotOutput("plot")
+                                      )
+                                  ))
+))
 
 # Define server logic required to draw a histogram
 server <- function(input, output, session){
@@ -56,47 +59,53 @@ server <- function(input, output, session){
         )
     })
     
+    
     #this updates the drop-down menu for selecting variables to plot given the data by taking the column names of the dataframe.
     observeEvent(data(),{
         choices=names(data())
-        updateSelectInput(session, "chosen.value", choices=choices)
+        updateSelectInput(session, "var1", choices=choices)
     })
     
     output$head <-   renderTable({
         head(data(), input$n)
     })
-
+    
     #
     output$var.check <- renderPrint({
         sapply(as.data.frame(data()), class)
     })
     
-    # ##get data ready to plot
-      dataSelection <- reactive({
-          dat <- data()
-          chosen.data <- dat %>% select(input$chosen.value)
-          return(chosen.data)
-      }) 
+    # # ##get data ready to plot
+    # dataSelection <- reactive({
+    #     dat <- data()
+    #     chosen.data <- dat %>% select(input$chosen.value)
+    #     return(chosen.data)
+    # }) 
+    # 
     
-      
     plotit = reactive({
         require(ggplot2)
-        chosen.data <- dataSelection()
-        if(class(chosen.data[[1]])=="numeric"){
-            values$p <-  ggplot(data = chosen.data, aes(chosen.data[[1]])) + geom_histogram(fill="gray", color="black") + theme_classic()
+        dat<- as.data.frame(data())
+        chosen.var=input$var1
+        slim.dat=dat%>%select(input$var1)
+        #histogram with one group
+        if(input$plot.type==1){
+        if(class(dat[,chosen.var])=="numeric"){
+            values$p <-  ggplot(data = slim.dat, aes(slim.dat[[1]])) + geom_histogram(fill="gray", color="black") + theme_classic() + xlab(input$var1) + geom_vline(aes(xintercept = mean(slim.dat[[1]])),lty=2,size=1)
             values$p
         }
         else{
             plot(1:2, 1:2, xaxt="n", yaxt="n", type="n", bty="n", xlab="", ylab="")
             text(x=1.5, y=1.5, labels="The chosen data is not a numerical value", cex=2)
-    }
-        })
+        }
+        }
+    })
     
     # 
-    output$histogram = renderPlot({
+    output$plot = renderPlot({
         print(plotit())
     })
-  
+    
     #
     output$export <- downloadHandler(
         filename <- function(){
@@ -106,7 +115,7 @@ server <- function(input, output, session){
             print(values$p)
             dev.off()
         }
-#        contentType = 'image/pdf'
+        #        contentType = 'image/pdf'
     )
 }
 

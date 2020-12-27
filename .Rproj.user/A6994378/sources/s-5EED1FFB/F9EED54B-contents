@@ -1,11 +1,4 @@
-#
-# This is a Shiny web application. You can run the application by clicking
-# the 'Run App' button above.
-#
-# Find out more about building applications with Shiny here:
-#
-#    http://shiny.rstudio.com/
-#
+
 
 library(shiny)
 library(rhandsontable)
@@ -20,7 +13,7 @@ ui <- shinyUI(navbarPage("Walking Through Stats",
                                   sidebarLayout(
                                       sidebarPanel(
                                           wellPanel(
-                                              h4("Upload data file (up to 5MB)"),
+                                              h3("Upload data file (.csv format)"),
                                               fileInput("upload", NULL)
                                               ),
                                           br(), 
@@ -38,11 +31,10 @@ ui <- shinyUI(navbarPage("Walking Through Stats",
                          tabPanel("Plot the data",
                                   sidebarLayout( # give us a nice data selection side bar!
                                       sidebarPanel(
-                                          h2("Try a histogram out for size"), # Some nice welcoming text for users
-                                          br(), br(),
+                                          h4("Try a histogram out for size"), 
                                           selectInput("chosen.value",  "Choose a value to plot", choices = NULL),
                                           br(),
-                                          downloadButton("export", label = "Download your figure")
+                                          downloadButton("export", label = "Download a report")
                                           ),
                                       mainPanel(
                                           plotOutput("histogram")
@@ -56,7 +48,6 @@ server <- function(input, output, session){
     
     data <- reactive({
         req(input$upload)
-        
         ext <- tools::file_ext(input$upload$name)
         switch(ext,
                csv = vroom::vroom(input$upload$datapath, delim = ","),
@@ -65,6 +56,7 @@ server <- function(input, output, session){
         )
     })
     
+    #this updates the drop-down menu for selecting variables to plot given the data by taking the column names of the dataframe.
     observeEvent(data(),{
         choices=names(data())
         updateSelectInput(session, "chosen.value", choices=choices)
@@ -86,8 +78,8 @@ server <- function(input, output, session){
           return(chosen.data)
       }) 
     
-    # 
-    output$histogram = renderPlot({
+      
+    plotit = reactive({
         require(ggplot2)
         chosen.data <- dataSelection()
         if(class(chosen.data[[1]])=="numeric"){
@@ -97,22 +89,26 @@ server <- function(input, output, session){
         else{
             plot(1:2, 1:2, xaxt="n", yaxt="n", type="n", bty="n", xlab="", ylab="")
             text(x=1.5, y=1.5, labels="The chosen data is not a numerical value", cex=2)
-        }
+    }
+        })
+    
+    # 
+    output$histogram = renderPlot({
+        print(plotit())
     })
   
     #
     output$export <- downloadHandler(
-        filename <- "trialplot.pdf",
-        #        filename <- function(){
-        #            paste("stats_graphs_", strftime(Sys.time(), format = "%Y-%m-%d_%H-%M-%S"), ".pdf", sep = "")},
-        content <- function(file){
-            pdf(file, "plot.pdf", onefile = T)
-            grid.arrange(values$p)
+        filename <- function(){
+            paste("plot_", strftime(Sys.time(), format = "%Y-%m-%d_%H-%M-%S"), ".pdf", sep = "")},
+        content = function(file){
+            pdf(file, onefile = T)
+            print(values$p)
             dev.off()
         }
+#        contentType = 'image/pdf'
     )
 }
-
 
 # Run the application 
 shinyApp(ui = ui, server = server)

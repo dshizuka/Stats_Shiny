@@ -1,0 +1,13 @@
+name: stats_shiny_v3
+title: stats_shiny_v3
+username:
+account: dshizuka
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 3425687
+bundleId: 4020442
+url: https://dshizuka.shinyapps.io/stats_shiny_v3/
+when: 1608675944.87172
+asMultiple: FALSE
+asStatic: FALSE
+ignoredFiles: rsconnect.R
