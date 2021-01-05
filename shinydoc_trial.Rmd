@@ -1,0 +1,50 @@
+---
+title: "BIOS 207 Lab Exercises"
+subtitle: "Week 1: Sampling, measuring, and descriptive statistics"
+author: "Dai Shizuka"
+date: "1/5/2021"
+output: html_document
+runtime: shiny
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+We will focus on the probabilistic nature of sampling during the first lab period. Sampling is probabilistic because every measurement that you take in nature is just one of many measurements you could have taken, so the data you actually end up with could have been different. As a result, it is rare to know, for example, the true mean height for a field of sunflowers. Unless, of course, you measure every single plant in the field.
+
+Still, you have to collect what data you can. If you measure the height of 10 sunflowers and calculate the mean from this sample, you only have an estimate of the mean. Because an estimate of the mean is not the true mean, one of the most fundamental issues in science is developing a sense of how reliable your estimate is and therefore how much confidence you should have in your results. 
+
+Learning objectives for Week 1:
+At the end of today, you should 
+
+1.	Be able to explain why samples are probabilistic, 
+2.	Be able to visualize a probability distribution for the estimate of a mean and to draw this as a histogram,
+3.	Be able to explain why an estimate of a mean cannot be viewed as a true measure of the mean,
+4.	Be able to explain why failure to randomize sampling can bias an estimate of the mean or variance,
+5.	Be able to hypothesize connections between physical traits (phenotypes) and individual fitness.
+
+What to do:
+
+1.	As a lab, you’ll go outside and find some plants with heights, stem diameters, leaf lengths, etc… you can measure. Agree as a lab which plants to use and what parts to measure.
+2.	Each of you will randomly choose 10 samples of whatever the class chose to sample. You will discuss how to randomly sample.
+3.	Go inside and measure your 10 samples. Enter your data in the table on the next page.
+4.	Write down your methods on the next page. Write them concisely but with enough detail that someone could repeat them. For example, how did you randomly sample? Write them like a narrative and not a recipe or lab report. 
+5.	Calculate the mean and variance of your sample.
+6.	Write your mean on the board.
+7.	Enter everyone’s means into a column of an Excel file on your computer. 
+8.	Using the instructions below, produce a histogram of the means.
+9.	Answer the questions about sampling and fitness.
+
+
+```{r tabsets, echo=FALSE}
+shinyAppDir("stats_shiny_v4",
+  options = list(
+    width = "100%", height = 550
+  )
+)
+```
+
+
+
+

@@ -1,0 +1,10 @@
+"0",""
+"0","renderPlot({"
+"0","  hist(faithful$eruptions, probability = TRUE, breaks = as.numeric(input$n_breaks),"
+"0","       xlab = ""Duration (minutes)"", main = ""Geyser eruption duration"")"
+"0","  "
+"0","  dens <- density(faithful$eruptions, adjust = input$bw_adjust)"
+"0","  lines(dens, col = ""blue"")"
+"0","})"
+"1","<shiny.render.function> 
+"
