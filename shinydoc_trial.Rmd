@@ -37,8 +37,8 @@ What to do:
 9.	Answer the questions about sampling and fitness.
 
 
-```{r tabsets, echo=FALSE}
-shinyAppDir("stats_shiny_v4",
+```{r, echo=FALSE}
+shinyAppDir("/Users/dshizuka/Documents/GitHub/Stats_Shiny/stats_shiny_v4/",
   options = list(
     width = "100%", height = 550
   )

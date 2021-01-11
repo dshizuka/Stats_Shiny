@@ -1,0 +1,12 @@
+name: shinydoc_trial3
+title: shinydoc_trial3
+username:
+account: dshizuka
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 3446532
+bundleId: 4063133
+url: https://dshizuka.shinyapps.io/shinydoc_trial3/
+when: 1609909276.70447
+asMultiple: FALSE
+asStatic: FALSE

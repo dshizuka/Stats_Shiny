@@ -2,8 +2,8 @@
     "sortOrder": [
         {
             "columnIndex": 2,
-            "ascending": true
+            "ascending": false
         }
     ],
-    "path": "~/Documents/GitHub/Stats_Shiny"
+    "path": "~/Documents/GitHub/Stats_Shiny/stats_shiny_v4"
 }
