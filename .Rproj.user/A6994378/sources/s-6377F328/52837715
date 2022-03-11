@@ -1,0 +1,24 @@
+{
+    "id": "52837715",
+    "path": "~/Documents/GitHub/Stats_Shiny/stats_shiny_v3/app.R",
+    "project_path": "stats_shiny_v3/app.R",
+    "type": "r_source",
+    "hash": "0",
+    "contents": "",
+    "dirty": false,
+    "created": 1647023090048.0,
+    "source_on_save": false,
+    "relative_order": 2,
+    "properties": {
+        "cursorPosition": "62,6",
+        "scrollLine": "46"
+    },
+    "folds": "",
+    "lastKnownWriteTime": 1608779848,
+    "encoding": "UTF-8",
+    "collab_server": "",
+    "source_window": "",
+    "last_content_update": 1608779848,
+    "read_only": false,
+    "read_only_alternatives": []
+}
