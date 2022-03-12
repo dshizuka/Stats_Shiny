@@ -5,6 +5,7 @@ library(rhandsontable)
 library(tidyverse)
 library(ggplot2)
 library(patchwork)
+library(survival)
 
 
 # Define UI for application that draws a histogram
@@ -31,18 +32,20 @@ ui <- shinyUI(navbarPage("Walking Through Stats",
                          tabPanel("Plot the data",
                                   sidebarLayout( # give us a nice data selection side bar!
                                       sidebarPanel(
-                                          h4("Try a histogram out for size"), 
-                                          selectInput("chosen.value",  "Choose a value to plot", choices = NULL),
+                                          h4("Plot a Kaplan-Meier Curve"), 
+                                          selectInput("latency",  "Choose a latency value to plot", choices = NULL),
+                                          selectInput("event",  "Choose the event column", choices = NULL),
+                                          selectInput("Sex",  "Choose the grouping (i.e., treatment) variable", choices = NULL),
                                           br(),
                                           downloadButton("export", label = "Download a report")
                                           ),
                                       mainPanel(
-                                          plotOutput("histogram")
+                                          plotOutput("KM")
                                   )
                          ))
                          ))
 
-# Define server logic required to draw a histogram
+# Define server logic required to draw a K-M plot
 server <- function(input, output, session){
     values <- reactiveValues()
     
@@ -59,7 +62,9 @@ server <- function(input, output, session){
     #this updates the drop-down menu for selecting variables to plot given the data by taking the column names of the dataframe.
     observeEvent(data(),{
         choices=names(data())
-        updateSelectInput(session, "chosen.value", choices=choices)
+        updateSelectInput(session, "latency", choices=choices)
+        updateSelectInput(session, "event", choices=choices)
+        updateSelectInput(session, "Sex", choices=choices)
     })
     
     output$head <-   renderTable({
@@ -74,26 +79,27 @@ server <- function(input, output, session){
     # ##get data ready to plot
       dataSelection <- reactive({
           dat <- data()
-          chosen.data <- dat %>% select(input$chosen.value)
+          chosen.data <- dat %>% select(input$latency, input$event, input$Sex)
           return(chosen.data)
       }) 
     
+      sf <- reactive({
+        chosen.data <-chosen.data()
+        sf <- survfit(Surv(latency, event)~Sex, data=chosen.data)
+        return(sf)
+      })
       
     plotit = reactive({
         require(ggplot2)
+      require(survival)
         chosen.data <- dataSelection()
-        if(class(chosen.data[[1]])=="numeric"){
-            values$p <-  ggplot(data = chosen.data, aes(chosen.data[[1]])) + geom_histogram(fill="gray", color="black") + theme_classic()
+        sf <- sf
+            values$p <-  plot(sf, col=c("red", "blue"), las=1, xlab = "time(minutes)", ylab = "proportion not learned")
             values$p
-        }
-        else{
-            plot(1:2, 1:2, xaxt="n", yaxt="n", type="n", bty="n", xlab="", ylab="")
-            text(x=1.5, y=1.5, labels="The chosen data is not a numerical value", cex=2)
-    }
         })
     
     # 
-    output$histogram = renderPlot({
+    output$KM = renderPlot({
         print(plotit())
     })
   
